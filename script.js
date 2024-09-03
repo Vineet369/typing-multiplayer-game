@@ -1,13 +1,16 @@
 let quote;
 let tempName = 1;
 let clientId = null;
-let clientName = '';
+// let clientName = '';
 let clientColor = '';
 let gameId = null;
 let playerColor = null;
 let completed = false;
 
-let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
+// let ws = new WebSocket("100.20.92.101:9090");
+// let ws = new WebSocket("wss://typing-master-multiplayer.onrender.com");
+let ws = new WebSocket("http://localhost:3000/");
+// let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
 
 const divGamePlay = document.getElementById("divGamePlay");
 // const timer = document.getElementById('timer');
@@ -26,12 +29,13 @@ const result = document.getElementById('result');
 
 btnPlayerName.addEventListener('click', e => {
     // let clientName = '';
-    if (player.value == null) {
-        clientName = `Player ${tempName}`
-        tempName += 1
-    } else {
-        clientName = player.value
-    }
+    // if (player.value == null) {
+    //     const clientName = `Player ${tempName} :`
+    //     tempName += 1
+    // } else {
+    //     clientName = player.value
+    // }
+    // console.log(clientName)
     const c1 = document.querySelector('#btnCreate')
     const c2 = document.querySelector('#btnJoin')
     const c3 = document.querySelector('#txtGameId')
@@ -48,7 +52,14 @@ btnJoin.addEventListener("click", e => {
     if (gameId === null) {
         gameId = txtGameId.value;
     }
-    // console.log(clientName)
+    let clientName;
+    if (player.value == null) {
+        clientName = `Player ${tempName} :`
+        tempName += 1
+    } else {
+        clientName = player.value
+    }
+    console.log(clientName)
 
     const payload = {
         "method": "join",
@@ -65,6 +76,13 @@ btnCreate.addEventListener("click", createNewGame)
 
 
 function createNewGame() {
+    let clientName;
+    if (player.value == null) {
+        clientName = `Player ${tempName} :`
+        tempName += 1
+    } else {
+        clientName = player.value
+    }
     const payload = {
         "method": "create",
         "playerName": clientName,
@@ -229,8 +247,11 @@ ws.onmessage = message => {
         const leaderboardHeight = game.clients.length * 50 + 5
         //leaderboard
         const leaderboard = document.createElement('div')
+        const leaderboardHeading = document.createElement('div')
         leaderboard.classList.add('leaderboard')
+        leaderboardHeading.classList.add('leaderboardHeading')
         leaderboard.style.height = `${leaderboardHeight}px`
+        leaderboardHeading.textContent = 'Dexterities'
 
         game.clients.forEach(c => {
             const playerDiv = document.createElement("div")
