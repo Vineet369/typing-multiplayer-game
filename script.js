@@ -7,10 +7,7 @@ let gameId = null;
 let playerColor = null;
 let completed = false;
 
-// let ws = new WebSocket("100.20.92.101:9090");
-// let ws = new WebSocket("wss://typing-master-multiplayer.onrender.com");
 let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
-// let ws = new WebSocket("http://localhost:3000/");
 
 const divGamePlay = document.getElementById("divGamePlay");
 // const timer = document.getElementById('timer');
