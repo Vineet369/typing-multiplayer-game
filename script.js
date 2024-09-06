@@ -7,10 +7,9 @@ let gameId = null;
 let playerColor = null;
 let completed = false;
 
-// let ws = new WebSocket("100.20.92.101:9090");
 // let ws = new WebSocket("wss://typing-master-multiplayer.onrender.com");
-let ws = new WebSocket("http://localhost:3000/");
-// let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
+// let ws = new WebSocket("http://localhost:3000/");
+let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
 
 const divGamePlay = document.getElementById("divGamePlay");
 // const timer = document.getElementById('timer');
@@ -59,7 +58,8 @@ btnJoin.addEventListener("click", e => {
     } else {
         clientName = player.value
     }
-    console.log(clientName)
+    // console.log(clientName)
+    const playerNameInfo = document.querySelector('.playerName') 
 
     const payload = {
         "method": "join",
@@ -67,8 +67,12 @@ btnJoin.addEventListener("click", e => {
         "clientId": clientId,
         "gameId": gameId
     }
-    // console.log(payload.clientId)    
+    // console.log(payload.playerName)    
     ws.send(JSON.stringify(payload));
+
+    if (playerNameInfo.hasChildNodes()) {
+        playerNameInfo.replaceChildren();
+    }
 })
 
 
@@ -76,30 +80,36 @@ btnCreate.addEventListener("click", createNewGame)
 
 
 function createNewGame() {
-    let clientName;
+    let adminName;
     if (player.value == null) {
-        clientName = `Player ${tempName} :`
+        adminName = `Player ${tempName} :`
         tempName += 1
     } else {
-        clientName = player.value
+        adminName = player.value
     }
     const payload = {
         "method": "create",
-        "playerName": clientName,
+        "adminName": adminName,
         "clientId": clientId,
         "admin": true
     }
     // console.log(payload.clientId)
+    // console.log(payload.adminName)    
+
     ws.send(JSON.stringify(payload));
 
     const creatingGame = document.createElement('div')
     creatingGame.id = 'creatingGame'
     creating.appendChild(creatingGame)
 
-    // const name = document.querySelector('.playerName')
+    const playerNameInfo = document.querySelector('.playerName') 
 
     while (invalid.firstChild)
         invalid.removeChild(invalid.firstChild)
+    
+    if (playerNameInfo.hasChildNodes()) {
+        playerNameInfo.replaceChildren();
+    }
     
     // if (name.hasChildNodes()) {
     //     name.replaceChildren();
@@ -244,14 +254,16 @@ ws.onmessage = message => {
 
         })
 
-        const leaderboardHeight = game.clients.length * 50 + 5
+        const leaderboardHeight = game.clients.length * 54 + 35
         //leaderboard
         const leaderboard = document.createElement('div')
         const leaderboardHeading = document.createElement('div')
         leaderboard.classList.add('leaderboard')
         leaderboardHeading.classList.add('leaderboardHeading')
+        leaderboardHeading.classList.add('leaderboardHeading')
         leaderboard.style.height = `${leaderboardHeight}px`
         leaderboardHeading.textContent = 'Dexterities'
+        leaderboard.appendChild(leaderboardHeading)
 
         game.clients.forEach(c => {
             const playerDiv = document.createElement("div")
