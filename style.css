@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fascinate+Inline&display=swap');
+
 * {
     padding: 0;
     margin: 0;
@@ -6,6 +9,7 @@
 
 body {
     background-color: #333333;
+    font-family: "Chakra Petch", sans-serif;
 }
 
 header {
@@ -22,12 +26,12 @@ header {
 }
 
 header .logo {
+    font-family: "Fascinate Inline", system-ui;
     position: relative;
     font-weight: 700;
     color: #c7a600;
     text-decoration: none;
     font-size: 2em;
-    text-transform: uppercase;
     letter-spacing: 2px;
     padding-left: 20px;
     transition: 0.6s;
@@ -84,13 +88,14 @@ header ul li a {
 }
 
 button {
+    font-family: "Chakra Petch", sans-serif;
     background-color: #c7a600;
     color: white;
     border-radius: 25px;
     border: 0;
-    padding: 20px;
+    padding: 15px;
     margin: 4px;
-    font-size: 15px;
+    font-size: 20px;
     /* height: 11%;
     width: 29%; */
 }
@@ -101,6 +106,7 @@ button:disabled {
 
 
 .intro {
+    font-family: "Chakra Petch", sans-serif;
     width: 100%;
     height: 35vh;
     display: flex;
@@ -118,25 +124,15 @@ button:disabled {
 
 .main-text {
     margin: 1vh;
-}
-
-.main-text {
-    /* display: flex; */
     color: bisque;
     font-size: 6vh;
     
-    /* align-items: center; */
-    /* justify-content: center; */
-    /* padding-top: 30px; */
 }
 
 .sub-heading {
-    /* display: flex; */
     color: rgb(245, 185, 112);
     font-size: 4vh;
-    /* align-items: center; */
-    /* justify-content: center; */
-    /* padding-top: 10px; */
+
     letter-spacing: 2px;
 }
 
@@ -170,13 +166,11 @@ button:disabled {
 #creatingGame {
     width: 100%;
     height: 100%;
-    /* border-radius: 50%; */
     top: 50%;
     left: 50%;
     z-index: 5;
     background-color: #515151;
     opacity: 0.7;
-    /* border: 2px solid rgb(211, 187, 0); */
     position: absolute;
     transform: translate(-50%,-50%);
 }
@@ -220,15 +214,11 @@ button:disabled {
     height: auto;
     margin-top: -8.5vh;
     
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* justify-content: end; */
-    
+
 
 }
 .game {
     width: 100%;
-    /* height: 20vh; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -237,9 +227,10 @@ button:disabled {
 }
 
 .game :first-child {
+    font-size: 30px;
+    padding: 5px;
     width: 50%;
     display: flex;
-    font-size: 20px;
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
@@ -363,7 +354,6 @@ button:disabled {
     width: 80%;
     border-radius: 5px;
     border: 0;
-    /* max-width: 100%; */
     box-sizing: border-box;
     margin-top: 2px;
     background-color: #fff1ac;
@@ -418,22 +408,7 @@ button:disabled {
 }
 
 
-/*  */
-/* 
-@keyframes scaleFade {
-    0% {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1.5);
-        opacity: 0;
-    }
-} */
+
 @keyframes scaleFade1 {
     0% {
         transform: scale(0.5);
@@ -462,7 +437,6 @@ button:disabled {
 } 
 
 
-/* Animation for even numbers */
 @keyframes scaleFade2 {
     0% {
         transform: scale(0.5);
@@ -481,7 +455,7 @@ button:disabled {
 .animate1 {
     position: absolute;
     z-index: 8;
-    font-size: 5rem; /* Adjust size as needed */
+    font-size: 5rem; 
     font-weight: bold;
     top: 50%;
     left: 50%;
@@ -493,7 +467,7 @@ button:disabled {
 .animate2{
     position: absolute;
     z-index: 8;
-    font-size: 5rem; /* Adjust size as needed */
+    font-size: 5rem; 
     font-weight: bold;
     top: 50%;
     left: 50%;
@@ -504,7 +478,6 @@ button:disabled {
 
 footer {
     position: relative;
-    /* top: 100%; */
     bottom: 0;
     width: 100%;
     background-color:#252525;
@@ -564,55 +537,3 @@ footer p {
     font-size: 1.1em;
 }
 
-/* footer .wave {
-    position: absolute;
-    top: -100px;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background-color: url(/public/wave.png);
-    background-size: 100px 100px;
-}
-
-footer .wave#wave1 {
-    z-index: 4;
-    opacity: 1;
-    bottom: 0;
-    animation: waveAnimation 4s linear infinity;
-}
-footer .wave#wave2 {
-    z-index: 3;
-    opacity: 0.5;
-    bottom: 10px;
-    animation: waveAnimation2 3s linear infinity;
-}
-footer .wave#wave3 {
-    z-index: 2;
-    opacity: 0.2;
-    bottom: 15px;
-    animation: waveAnimation3 2s linear infinity;
-}
-footer .wave#wave4 {
-    z-index: 3;
-    opacity: 0.5;
-    bottom: 10px;
-    animation: waveAnimation2 4s linear infinity;
-}
-
-@keyframes waveAnimation {
-    0% {
-        background-position-x: 100px;
-    }
-    100% {
-        background-position-x: 0px;
-    }
-}
-
-@keyframes waveAnimation2 {
-    0% {
-        background-position-x: 0px;
-    }
-    100% {
-        background-position-x: 100px;
-    }
-} */
