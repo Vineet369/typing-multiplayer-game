@@ -117,13 +117,13 @@ button:disabled {
 }
 
 .main-text {
-    margin-bottom: 16px;
+    margin: 1vh;
 }
 
 .main-text {
     /* display: flex; */
     color: bisque;
-    font-size: 60px;
+    font-size: 6vh;
     
     /* align-items: center; */
     /* justify-content: center; */
@@ -133,7 +133,7 @@ button:disabled {
 .sub-heading {
     /* display: flex; */
     color: rgb(245, 185, 112);
-    font-size: 25px;
+    font-size: 4vh;
     /* align-items: center; */
     /* justify-content: center; */
     /* padding-top: 10px; */
@@ -504,6 +504,8 @@ button:disabled {
 
 footer {
     position: relative;
+    /* top: 100%; */
+    bottom: 0;
     width: 100%;
     background-color:#252525;
     min-height: 100px;
