@@ -170,15 +170,32 @@ ws.onmessage = message => {
         //Game ID
         const publicGameIdDiv = document.createElement("div")
         const publicGameId = document.createElement("div")
+        // const gId = document.createElement("span")
         publicGameIdDiv.id = 'publicGameIdContainer'
         publicGameId.id = 'publicGameId'
+        // gId.id = 'gameId'
 
-        publicGameId.textContent = `Game ID: ${response.game.id} Waiting for others to join`
+        // gId.textContent = response.game.id
+        publicGameId.textContent = `Game ID: ${gameId}`
         gameElement.appendChild(publicGameIdDiv)
         publicGameIdDiv.appendChild(publicGameId)
+        // publicGameIdDiv.appendChild(gId)
         // gameElement.style.height = '7vh'
+        // gId.onclick = copyTxt()
+        // function copyTxt(){
+        //     var copyText = document.querySelector("#gameId");
 
-        // const name = document.getElementsByClassName('playerName')
+        //     // Select the text field
+        //     copyText.select();
+        //     copyText.setSelectionRange(0, 99999); // For mobile devices
+
+        //     // Copy the text inside the text field
+        //     navigator.clipboard.writeText(copyText.textContent);
+            
+        //     // Alert the copied text
+        //     alert("Copied the text: " + copyText.value);
+        // }
+        // // const name = document.getElementsByClassName('playerName')
 
         while (mainContainer.firstChild)
             mainContainer.removeChild(mainContainer.firstChild)

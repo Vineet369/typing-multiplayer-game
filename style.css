@@ -258,6 +258,14 @@ button:disabled {
     margin: 40px 5px 5px;
 }
 
+/* #publicGameIdContainer{
+    display: flex;
+}
+
+#gameId:hover{
+    cursor: copy;
+} */
+
 .leaderboard {
     overflow: hidden;
     margin: 10px 0;
@@ -379,7 +387,8 @@ button:disabled {
 }
 
 .quote-input {
-    padding: 20px;
+    padding: 10px;
+    font-size: 20px;
     width: 75%;
     max-width: 800%;
     box-sizing: border-box;
