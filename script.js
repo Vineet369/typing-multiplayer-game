@@ -9,8 +9,8 @@ let completed = false;
 
 
 //connecting with websocket server---------------------
-let ws = new WebSocket("http://localhost:3000/");
-// let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
+// let ws = new WebSocket("http://localhost:3000/");
+let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
 
 
 //getting some pre-existing elements from html--------- 
