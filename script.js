@@ -1,18 +1,20 @@
+//constants--------------------------------------------
 let quote;
 let tempName = 1;
 let clientId = null;
-// let clientName = '';
 let clientColor = '';
 let gameId = null;
 let playerColor = null;
 let completed = false;
 
-// let ws = new WebSocket("wss://typing-master-multiplayer.onrender.com");
-// let ws = new WebSocket("http://localhost:3000/");
-let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
 
+//connecting with websocket server---------------------
+let ws = new WebSocket("http://localhost:3000/");
+// let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
+
+
+//getting some pre-existing elements from html--------- 
 const divGamePlay = document.getElementById("divGamePlay");
-// const timer = document.getElementById('timer');
 const btnPlayerName = document.getElementById('btnName');
 const player = document.getElementById('nameInput');
 const btnCreate = document.getElementById("btnCreate");
@@ -24,29 +26,19 @@ const invalid = document.getElementById('invalid');
 const result = document.getElementById('result');
 
 
-//event listeners
-
+//event listeners---------------------------------------
+//for button "i'm in" while everything else remain disabled
 btnPlayerName.addEventListener('click', e => {
-    // let clientName = '';
-    // if (player.value == null) {
-    //     const clientName = `Player ${tempName} :`
-    //     tempName += 1
-    // } else {
-    //     clientName = player.value
-    // }
-    // console.log(clientName)
     const c1 = document.querySelector('#btnCreate')
     const c2 = document.querySelector('#btnJoin')
     const c3 = document.querySelector('#txtGameId')
 
-    // c1.style.cursor = 'degault';
     c1.disabled = false
-    // c2.style.cursor = 'pointer';
     c2.disabled = false 
     c3.disabled = false 
-
 })
 
+//for button "join game"
 btnJoin.addEventListener("click", e => {
     if (gameId === null) {
         gameId = txtGameId.value;
@@ -67,18 +59,20 @@ btnJoin.addEventListener("click", e => {
         "clientId": clientId,
         "gameId": gameId
     }
-    // console.log(payload.playerName)    
+
+    //message to server to enter the player into the game    
     ws.send(JSON.stringify(payload));
 
+    //removing all buttons from the game screen for other elements to render
     if (playerNameInfo.hasChildNodes()) {
         playerNameInfo.replaceChildren();
     }
 })
 
-
+//for starting new game
 btnCreate.addEventListener("click", createNewGame)
 
-
+//single function to create new game
 function createNewGame() {
     let adminName;
     if (player.value == null) {
@@ -87,6 +81,7 @@ function createNewGame() {
     } else {
         adminName = player.value
     }
+
     const payload = {
         "method": "create",
         "adminName": adminName,
@@ -96,6 +91,7 @@ function createNewGame() {
     // console.log(payload.clientId)
     // console.log(payload.adminName)    
 
+    //message to server to start new game and make a new game id
     ws.send(JSON.stringify(payload));
 
     const creatingGame = document.createElement('div')
@@ -104,108 +100,60 @@ function createNewGame() {
 
     const playerNameInfo = document.querySelector('.playerName') 
 
+    //removing all buttons from the game screen for other elements to render
     while (invalid.firstChild)
         invalid.removeChild(invalid.firstChild)
     
     if (playerNameInfo.hasChildNodes()) {
         playerNameInfo.replaceChildren();
     }
-    
-    // if (name.hasChildNodes()) {
-    //     name.replaceChildren();
-    // }
-
 }    
 
-//socket
+//websocket(server) messages------------------------------
 ws.onmessage = message => {
     const response = JSON.parse(message.data);
-    // console.log(response + "response")
-    //connect
+
+    //connectd to server and got the client Id
     if (response.method === "connect") {
         clientId = response.clientId;
-        console.log("clientId sent" + clientId)
+        // console.log("clientId sent" + clientId)
     }
 
-    // //create
-    // if (response.method === "create"){
-    //     gameId = response.game.id
-    //     quote = response.game.displayText
-    //     // console.log("game created successfully " + response.game.id )
-
-    //     creating.removeChild(creating.firstChild)
-
-    //     //Game ID
-    //     const publicGameId = document.createElement("div")
-    //     publicGameId.id = 'publicGameId'
-
-    //     publicGameId.textContent = `Game ID: ${response.game.id} Waiting for others to join`
-    //     creating.appendChild(publicGameId)
-    // }
-
-    //join
+    //join flag to render the next page where players will join now
     if (response.method === "join") {
         gameId = response.game.id
         quote = response.game.displayText
         const game = response.game
         clientColor = response.game.clients.color
         const gameElement = document.querySelector('.gameElement')
-        // const btnCreate = document.getElementsByClassName('btnCreate')
         const divPlayers = document.querySelector('#divPlayers')
         let g = document.querySelector('.game')
 
+        //removing the loading effect
         while (creating.firstChild)
             creating.removeChild(creating.firstChild)
 
-        // while(g){
-        //     gameElement.removeChild(g)
-        //     console.log(typeof(document.querySelector('.game')))
-        // } 
         if (gameElement.hasChildNodes()) {
             gameElement.replaceChildren();
         }
         while (divPlayers.firstChild)
             divPlayers.removeChild(divPlayers.firstChild)
 
-        //Game ID
+        //Game ID, creating new elements
         const publicGameIdDiv = document.createElement("div")
         const publicGameId = document.createElement("div")
-        // const gId = document.createElement("span")
         publicGameIdDiv.id = 'publicGameIdContainer'
         publicGameId.id = 'publicGameId'
-        // gId.id = 'gameId'
-
-        // gId.textContent = response.game.id
         publicGameId.textContent = `Game ID: ${gameId}`
+
+        //appending to existing elements(parents)
         gameElement.appendChild(publicGameIdDiv)
         publicGameIdDiv.appendChild(publicGameId)
-        // publicGameIdDiv.appendChild(gId)
-        // gameElement.style.height = '7vh'
-        // gId.onclick = copyTxt()
-        // function copyTxt(){
-        //     var copyText = document.querySelector("#gameId");
-
-        //     // Select the text field
-        //     copyText.select();
-        //     copyText.setSelectionRange(0, 99999); // For mobile devices
-
-        //     // Copy the text inside the text field
-        //     navigator.clipboard.writeText(copyText.textContent);
-            
-        //     // Alert the copied text
-        //     alert("Copied the text: " + copyText.value);
-        // }
-        // // const name = document.getElementsByClassName('playerName')
-
+        
         while (mainContainer.firstChild)
             mainContainer.removeChild(mainContainer.firstChild)
 
-        
-        // if (name.hasChildNodes()) {
-        //     name.replaceChildren();
-        // }
-
-        //defining elements
+        //creating new elements
         const container = document.createElement("div")
         const typingSection = document.createElement("div")
         const quoteDisplayElement = document.createElement("div")
@@ -217,10 +165,8 @@ ws.onmessage = message => {
         quoteDisplayElement.classList.add('quote-display')
         quoteInputElement.classList.add('quote-input')
 
-        //container
+        //styliing
         container.style.width = "800px";
-
-        //quoteDisplay
         quoteDisplayElement.style.width = "75%";
 
         //textarea
@@ -236,43 +182,44 @@ ws.onmessage = message => {
         timerElement.classList.add('timerValue')
 
         timer.appendChild(timerElement);
+
         //main container
         mainContainer.appendChild(container);
-        // gameElement.appendChild(container)
         container.appendChild(typingSection);
-        typingSection.appendChild(timer)
+        typingSection.appendChild(timer);
         typingSection.appendChild(quoteDisplayElement);
         typingSection.appendChild(quoteInputElement);
-        //start button
 
-        // console.log(response.admin + "admin status")
-
+        //creating start button only for admin
         const btnStart = document.createElement('button')
         if (response.admin) {
             btnStart.classList.add('btnStart')
             btnStart.textContent = 'Start'
             container.append(btnStart)
-
         }
-
+        
+        //event listener for start button 
         btnStart.addEventListener("click", (e) => {
             const payload = {
                 "method": "start",
                 "clientId": clientId,
                 "gameId": gameId
             }
-            // console.log(payload.clientId)
+
+            //message to server to start game for all players
             ws.send(JSON.stringify(payload));
 
-            // const container = document.getElementsByClassName('container')
+            //removing the start button
             while (container.contains(btnStart))
                 container.removeChild(btnStart)
 
 
         })
 
+        //dynamic height calculation for Dexterities box
         const leaderboardHeight = game.clients.length * 54 + 35
-        //leaderboard
+        
+        //leaderboard(creating, styling, adding to parent)
         const leaderboard = document.createElement('div')
         const leaderboardHeading = document.createElement('div')
         leaderboard.classList.add('leaderboard')
@@ -282,6 +229,7 @@ ws.onmessage = message => {
         leaderboardHeading.textContent = 'Dexterities'
         leaderboard.appendChild(leaderboardHeading)
 
+        //creating progress-bar for all players
         game.clients.forEach(c => {
             const playerDiv = document.createElement("div")
             const playerIdentity = document.createElement("h3")
@@ -293,7 +241,6 @@ ws.onmessage = message => {
             playerIdentity.classList.add('identity')
             playerProgress.classList.add('progress-bar')
 
-            // gameElement.style.height = '60vh';
             playerDiv.style.backgroundColor = c.color
             playerIdentity.textContent = `${c.playerName} :`;
             // console.log(playerName)
@@ -315,7 +262,7 @@ ws.onmessage = message => {
         })
 
 
-        //socket event listner
+        //event listner to send the typing progress to server
         quoteInputElement.addEventListener('input', () => {
             const arrayQuote = quoteDisplayElement.querySelectorAll('span')
             const arrayInput = quoteInputElement.value.split('')
@@ -325,7 +272,7 @@ ws.onmessage = message => {
 
 
 
-            // console.log(textProgress)
+            // checking the accurecy of typed words
             let correct = true
             let correctCount = 0
             arrayQuote.forEach((characterSpan, index) => {
@@ -353,14 +300,16 @@ ws.onmessage = message => {
                 "gameId": gameId,
                 "progress": textProgress
             }
-            // console.log(payload.clientId)
+
+            // message to server about typing progress
             ws.send(JSON.stringify(payload));
 
+            //checking whether player has completed typing or not
             if (arrayInputLength === quoteLength) {
                 completed = true
                 const quoteInputElement = document.getElementById('dynamicInput')
-
                 quoteInputElement.disabled = true
+
                 const payload = {
                     "method": "progress completed",
                     "clientId": clientId,
@@ -368,18 +317,19 @@ ws.onmessage = message => {
                     "accuracy": correctCount,
                     "duration": timerElement.textContent
                 }
-                ws.send(JSON.stringify(payload));
-                // console.log("success sent")
 
+                //message to server about completion and accuracy and duration report 
+                ws.send(JSON.stringify(payload));
             }
         })
 
 
         // generate display text
         async function generateQuote() {
-            // const quote = response.quote
             quote = response.game.displayText
             quoteDisplayElement.innerHTML = ''
+
+            //spliting each word into separate span to check for accuracy 
             quote.split('').forEach(character => {
                 const characterSpan = document.createElement('span')
                 characterSpan.classList.add('quote-character')
@@ -387,51 +337,26 @@ ws.onmessage = message => {
                 quoteDisplayElement.appendChild(characterSpan)
             })
             quoteInputElement.value = null
-            // startTimer()
-            // console.log(quote)
         }
-
-
         generateQuote()
-
-
     }
 
-    //start
+    //start flag from server to begin the countdown
     if (response.method === "start") {
-
-        //timer
-        // const timer = document.createElement('div')
-        // const timerElement = document.createElement("div")
-        // timer.classList.add('timer')
-        // timerElement.classList.add('timerValue')
-        // const typingSection = document.querySelector('typingSection')
-
-        // console.log("added timer1")
-        // console.log("added timer2")
-        // timer.appendChild(timerElement);
-        // if (typingSection.firstChild) {
-        //     typingSection.insertBefore(timer, typingSection.firstChild);
-        //     console.log("added timer")
-        // } else {
-        //     typingSection.appendChild(timer); // If there are no children, just append it
-        // }
-
-
-        // const timer = document.getElementsByClassName('timer')
         const timerElement = document.querySelector('.timerValue')
         const countDown = document.createElement('div')
         const countDownBg = document.createElement('div')
-
-
         mainContainer.appendChild(countDown)
         mainContainer.appendChild(countDownBg)
         const quoteInputElement = document.getElementById('dynamicInput')
+        
         let startTime = new Date()
         let duration
-
         let animationToggle = true;
 
+        //countdown(we use two classes to show the countdown running 
+        //and to do that these two classes are keep getting added and removed in sync 
+        //with the countdown to show the growing effect which is not possible with a single class)
         function countdown() {
             duration = 5
             countDown.classList.add('animate2');
@@ -470,11 +395,8 @@ ws.onmessage = message => {
                                 clearInterval(mainClock)
                             }
                         }, 100)
-
                     })
                 }
-
-
             }, 1000)
         }
         function getLeftTime() {
@@ -482,14 +404,10 @@ ws.onmessage = message => {
             return duration - elapsedTime
         }
         countdown()
-
-
-
-
     }
 
+    //invalid entry flag message from server when someone tries to enter into an already started game
     if (response.method === "invalid entry") {
-        // console.log("client recieved invalid entry")
         const invalidEntryElement = document.createElement('div')
         invalidEntryElement.classList.add('invalid-entry')
         invalidEntryElement.style.padding = '20px'
@@ -504,19 +422,17 @@ ws.onmessage = message => {
         newGame.addEventListener('click', createNewGame)
     }
 
+    //real-time progress bar values of all players sent from server 
     if (response.method === "progress") {
-        // const playerProgress = document.getElementById('playerProgress')
-
-        // const clientLength = Object.keys(response.game.clients).length
         response.game.clients.forEach(c => {
             const progressBar = document.getElementById(`${c.color}`)
             const progressValue = document.getElementsByClassName(`progress-bar-value`)
             progressBar.style.width = `${c.progress}%`
             progressValue.textContent = c.progress
-
         })
     }
 
+    //result flag from server to show result of players who have completed typing
     if (response.method === "result") {
         if (result.hasChildNodes()) {
             result.replaceChildren();
@@ -534,12 +450,10 @@ ws.onmessage = message => {
                 playerScore.style.padding = "10px"
                 playerScore.style.backgroundColor = c.color
                 playerScore.textContent = `${c.playerName} scored ${c.score}`
-
                 result.appendChild(playerScore)
             }
         })
     }
-
 }
 
 

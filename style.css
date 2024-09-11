@@ -104,6 +104,10 @@ button:disabled {
     opacity: 0.7;
 }
 
+button:hover {
+    background-color: #ad9100;
+ 
+}
 
 .intro {
     font-family: "Chakra Petch", sans-serif;
@@ -258,14 +262,6 @@ button:disabled {
     margin: 40px 5px 5px;
 }
 
-/* #publicGameIdContainer{
-    display: flex;
-}
-
-#gameId:hover{
-    cursor: copy;
-} */
-
 .leaderboard {
     overflow: hidden;
     margin: 10px 0;
@@ -330,6 +326,9 @@ button:disabled {
     .main-text{
         font-size: 60px;
     }
+    .typingSection{
+        width: 50rem !important;
+    }
 }
 
 @media (max-width: 950px) {
@@ -390,7 +389,7 @@ button:disabled {
     padding: 10px;
     font-size: 20px;
     width: 75%;
-    max-width: 800%;
+    /* max-width: 100%; */
     box-sizing: border-box;
     margin: 0 15px;
 }
