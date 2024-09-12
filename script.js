@@ -4,6 +4,7 @@ let tempName = 1;
 let clientId = null;
 let clientColor = '';
 let gameId = null;
+let admin = false;
 let playerColor = null;
 let completed = false;
 
@@ -75,6 +76,8 @@ btnCreate.addEventListener("click", createNewGame)
 //single function to create new game
 function createNewGame() {
     let adminName;
+    admin = true;
+    
     if (player.value == null) {
         adminName = `Player ${tempName} :`
         tempName += 1
@@ -192,6 +195,7 @@ ws.onmessage = message => {
 
         //creating start button only for admin
         const btnStart = document.createElement('button')
+        console.log(response.admin)
         if (response.admin) {
             btnStart.classList.add('btnStart')
             btnStart.textContent = 'Start'
@@ -320,6 +324,7 @@ ws.onmessage = message => {
 
                 //message to server about completion and accuracy and duration report 
                 ws.send(JSON.stringify(payload));
+                
             }
         })
 
@@ -328,7 +333,7 @@ ws.onmessage = message => {
         async function generateQuote() {
             quote = response.game.displayText
             quoteDisplayElement.innerHTML = ''
-
+            console.log("quote:::" + quote)
             //spliting each word into separate span to check for accuracy 
             quote.split('').forEach(character => {
                 const characterSpan = document.createElement('span')
@@ -392,6 +397,7 @@ ws.onmessage = message => {
                         let mainClock = setInterval(() => {
                             timerElement.innerText = Math.floor((new Date() - startTime) / 100)
                             if (completed == true) {
+                                completed = false
                                 clearInterval(mainClock)
                             }
                         }, 100)
@@ -434,23 +440,66 @@ ws.onmessage = message => {
 
     //result flag from server to show result of players who have completed typing
     if (response.method === "result") {
+        let count = 0;
+        let maxScore = -10000
+        const totalPlayers = response.game.clients.length;
         if (result.hasChildNodes()) {
             result.replaceChildren();
         }
 
         const resultHeading = document.createElement('h2')
+        // result.style.display = 'flex'
         resultHeading.style.color = 'white'
         resultHeading.textContent = 'Individual Score'
         result.appendChild(resultHeading)
 
         response.game.clients.forEach(c => {
             if (c.score !== 0) {
-                // console.log(c.score + "Score")
+                if (maxScore < c.score ){
+                    maxScore = c.score
+                }
                 const playerScore = document.createElement('div')
+                // const winner = document.createElement('div')
                 playerScore.style.padding = "10px"
                 playerScore.style.backgroundColor = c.color
+                // winner.textContent = "Heighest Scorer"
+                // winner.style.padding = "2px"
                 playerScore.textContent = `${c.playerName} scored ${c.score}`
                 result.appendChild(playerScore)
+                // result.appendChild(winner)
+                count += 1
+            }
+
+            if (count === totalPlayers && admin){
+                const container = document.querySelector('.container')
+                const btnPlayAgain = document.createElement('button')
+                btnPlayAgain.classList.add('playAgain')
+                btnPlayAgain.textContent = "Play Again"
+                container.appendChild(btnPlayAgain)   
+
+                btnPlayAgain.addEventListener("click", () => {
+                    
+                    if (mainContainer.hasChildNodes()) {
+                        mainContainer.replaceChildren();
+                    }
+            
+                    const creatingGame = document.createElement('div')
+                    creatingGame.id = 'creatingGame'
+                    creating.appendChild(creatingGame)
+                    
+                    const payload = {
+                        "method": "join",
+                        "clientId": clientId,
+                        "gameId": gameId,
+                        "adminStatus": admin,
+                        "playAgain": true
+                    } 
+
+                    ws.send(JSON.stringify(payload));
+                })
+            }
+            if (result.hasChildNodes()) {
+                result.replaceChildren();
             }
         })
     }
