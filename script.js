@@ -10,8 +10,8 @@ let completed = false;
 
 
 //connecting with websocket server---------------------
-// let ws = new WebSocket("http://localhost:3000/");
-let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
+let ws = new WebSocket("http://localhost:3000/");
+// let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
 
 
 //getting some pre-existing elements from html--------- 
@@ -124,6 +124,7 @@ ws.onmessage = message => {
 
     //join flag to render the next page where players will join now
     if (response.method === "join") {
+        let textProgress = 0
         gameId = response.game.id
         quote = response.game.displayText
         const game = response.game
@@ -202,7 +203,6 @@ ws.onmessage = message => {
 
         //creating start button only for admin
         const btnStart = document.createElement('button')
-        console.log(response.admin)
         if (response.admin) {
             btnStart.classList.add('btnStart')
             btnStart.textContent = 'Start'
@@ -257,7 +257,7 @@ ws.onmessage = message => {
             // console.log(playerName)
 
             percentage.classList.add('progress-bar-value')
-            percentage.textContent = 0
+            percentage.textContent = ''
             fill.classList.add('progress-bar-fill')
             fill.id = c.color
 
@@ -279,8 +279,7 @@ ws.onmessage = message => {
             const arrayInput = quoteInputElement.value.split('')
             const quoteLength = quote.length
             const arrayInputLength = arrayInput.length
-            const textProgress = (1 - (quoteLength - arrayInput.length) / quoteLength) * 100
-
+            textProgress = (1 - (quoteLength - arrayInput.length) / quoteLength) * 100
             // checking the accurecy of typed words
             let correct = true
             let correctCount = 0
@@ -342,7 +341,6 @@ ws.onmessage = message => {
         async function generateQuote() {
             quote = response.game.displayText
             quoteDisplayElement.innerHTML = ''
-            console.log("quote:::" + quote)
 
             //spliting each word into separate span to check for accuracy 
             quote.split('').forEach(character => {
@@ -442,9 +440,9 @@ ws.onmessage = message => {
     if (response.method === "progress") {
         response.game.clients.forEach(c => {
             const progressBar = document.getElementById(`${c.color}`)
-            const progressValue = document.getElementsByClassName(`progress-bar-value`)
+            const progressValue = document.querySelector(`.progress-bar-value`)
             progressBar.style.width = `${c.progress}%`
-            progressValue.textContent = c.progress
+            progressValue.textContent = `${c.progress.toFixed(1)}%`
         })
     }
 

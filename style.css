@@ -462,11 +462,11 @@ button:hover {
 
 .animate1 {
     position: absolute;
+    display: flex;
     z-index: 8;
     font-size: 5rem; 
     font-weight: bold;
-    top: 50%;
-    left: 50%;
+    justify-content: center;
     text-align: center;
     color: #ff3e00;
     animation: scaleFade1 1s ease-in-out forwards;
@@ -474,11 +474,11 @@ button:hover {
 
 .animate2{
     position: absolute;
+    display: flex;
     z-index: 8;
     font-size: 5rem; 
     font-weight: bold;
-    top: 50%;
-    left: 50%;
+    justify-content: center;
     text-align: center;
     color: #ff3e00;
     animation: scaleFade2 1s ease-in-out forwards;
