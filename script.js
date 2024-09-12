@@ -1,4 +1,4 @@
-//constants--------------------------------------------
+//constants-------------------------------------------------------------------
 let quote;
 let tempName = 1;
 let clientId = null;
@@ -27,7 +27,7 @@ const invalid = document.getElementById('invalid');
 const result = document.getElementById('result');
 
 
-//event listeners---------------------------------------
+//event listeners----------------------------------------------------------------
 //for button "i'm in" while everything else remain disabled
 btnPlayerName.addEventListener('click', e => {
     const c1 = document.querySelector('#btnCreate')
@@ -112,7 +112,7 @@ function createNewGame() {
     }
 }    
 
-//websocket(server) messages------------------------------
+//websocket(server) messages-----------------------------------------------------
 ws.onmessage = message => {
     const response = JSON.parse(message.data);
 
@@ -136,11 +136,18 @@ ws.onmessage = message => {
         while (creating.firstChild)
             creating.removeChild(creating.firstChild)
 
+        //removing all children of main section where player interacts
         if (gameElement.hasChildNodes()) {
             gameElement.replaceChildren();
         }
+
         while (divPlayers.firstChild)
             divPlayers.removeChild(divPlayers.firstChild)
+
+        //removing the results in case of rematch
+        if (result.hasChildNodes()) {
+            result.replaceChildren();
+        }
 
         //Game ID, creating new elements
         const publicGameIdDiv = document.createElement("div")
@@ -274,8 +281,6 @@ ws.onmessage = message => {
             const arrayInputLength = arrayInput.length
             const textProgress = (1 - (quoteLength - arrayInput.length) / quoteLength) * 100
 
-
-
             // checking the accurecy of typed words
             let correct = true
             let correctCount = 0
@@ -310,7 +315,12 @@ ws.onmessage = message => {
 
             //checking whether player has completed typing or not
             if (arrayInputLength === quoteLength) {
+
+                //completed is a global variable with default value false. As soon as all the words have
+                //got typed (arrayInputLength === quoteLength), it gets true and the timer recieves this 
+                //true message and instantly put to stop.
                 completed = true
+
                 const quoteInputElement = document.getElementById('dynamicInput')
                 quoteInputElement.disabled = true
 
@@ -324,7 +334,6 @@ ws.onmessage = message => {
 
                 //message to server about completion and accuracy and duration report 
                 ws.send(JSON.stringify(payload));
-                
             }
         })
 
@@ -334,6 +343,7 @@ ws.onmessage = message => {
             quote = response.game.displayText
             quoteDisplayElement.innerHTML = ''
             console.log("quote:::" + quote)
+
             //spliting each word into separate span to check for accuracy 
             quote.split('').forEach(character => {
                 const characterSpan = document.createElement('span')
@@ -396,8 +406,8 @@ ws.onmessage = message => {
                         startTime = new Date()
                         let mainClock = setInterval(() => {
                             timerElement.innerText = Math.floor((new Date() - startTime) / 100)
-                            if (completed == true) {
-                                completed = false
+                            if (completed == true) {    // completed is that global variable which as
+                                completed = false       //soon as sets to true clears the interval and stops the clock
                                 clearInterval(mainClock)
                             }
                         }, 100)
@@ -441,35 +451,32 @@ ws.onmessage = message => {
     //result flag from server to show result of players who have completed typing
     if (response.method === "result") {
         let count = 0;
-        let maxScore = -10000
+        // let maxScore = -10000  ---in Beta phase
         const totalPlayers = response.game.clients.length;
+        
         if (result.hasChildNodes()) {
             result.replaceChildren();
         }
 
         const resultHeading = document.createElement('h2')
-        // result.style.display = 'flex'
         resultHeading.style.color = 'white'
         resultHeading.textContent = 'Individual Score'
         result.appendChild(resultHeading)
 
         response.game.clients.forEach(c => {
             if (c.score !== 0) {
-                if (maxScore < c.score ){
-                    maxScore = c.score
-                }
+                // if (maxScore < c.score ){
+                //     maxScore = c.score
+                // }   --in Beta phase
                 const playerScore = document.createElement('div')
-                // const winner = document.createElement('div')
                 playerScore.style.padding = "10px"
                 playerScore.style.backgroundColor = c.color
-                // winner.textContent = "Heighest Scorer"
-                // winner.style.padding = "2px"
                 playerScore.textContent = `${c.playerName} scored ${c.score}`
                 result.appendChild(playerScore)
-                // result.appendChild(winner)
                 count += 1
             }
 
+            //only for admin to restart the game. button appears when all have completed
             if (count === totalPlayers && admin){
                 const container = document.querySelector('.container')
                 const btnPlayAgain = document.createElement('button')
@@ -477,12 +484,13 @@ ws.onmessage = message => {
                 btnPlayAgain.textContent = "Play Again"
                 container.appendChild(btnPlayAgain)   
 
+                //event listner for replaying the game
                 btnPlayAgain.addEventListener("click", () => {
-                    
                     if (mainContainer.hasChildNodes()) {
                         mainContainer.replaceChildren();
                     }
             
+                    // loader element
                     const creatingGame = document.createElement('div')
                     creatingGame.id = 'creatingGame'
                     creating.appendChild(creatingGame)
@@ -497,9 +505,6 @@ ws.onmessage = message => {
 
                     ws.send(JSON.stringify(payload));
                 })
-            }
-            if (result.hasChildNodes()) {
-                result.replaceChildren();
             }
         })
     }
