@@ -447,7 +447,7 @@ ws.onmessage = message => {
             const percentage = document.getElementById(`${c.color}***`)
 
             progressBar.style.width = `${c.progress}%`
-            percentage.textContent = `${c.progress}`
+            percentage.textContent = `${c.progress}%`
         })
     }
 
