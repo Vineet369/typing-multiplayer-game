@@ -9,12 +9,12 @@ let playerColor = null;
 let completed = false;
 
 
-//connecting with websocket server---------------------
+//connecting with websocket server--------------------------------------------
 // let ws = new WebSocket("http://localhost:3000/");
 let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
 
 
-//getting some pre-existing elements from html--------- 
+//getting some pre-existing elements from html-------------------------------- 
 const divGamePlay = document.getElementById("divGamePlay");
 const btnPlayerName = document.getElementById('btnName');
 const player = document.getElementById('nameInput');
@@ -27,7 +27,7 @@ const invalid = document.getElementById('invalid');
 const result = document.getElementById('result');
 
 
-//event listeners----------------------------------------------------------------
+//event listeners---------------------------------------------------------------
 //for button "i'm in" while everything else remain disabled
 btnPlayerName.addEventListener('click', e => {
     const c1 = document.querySelector('#btnCreate')
@@ -124,7 +124,6 @@ ws.onmessage = message => {
 
     //join flag to render the next page where players will join now
     if (response.method === "join") {
-        let textProgress = 0
         gameId = response.game.id
         quote = response.game.displayText
         const game = response.game
@@ -256,8 +255,9 @@ ws.onmessage = message => {
             playerIdentity.textContent = `${c.playerName} :`;
             // console.log(playerName)
 
+            percentage.id=`${c.color}***`
             percentage.classList.add('progress-bar-value')
-            percentage.textContent = ''
+            percentage.textContent = 0
             fill.classList.add('progress-bar-fill')
             fill.id = c.color
 
@@ -279,7 +279,8 @@ ws.onmessage = message => {
             const arrayInput = quoteInputElement.value.split('')
             const quoteLength = quote.length
             const arrayInputLength = arrayInput.length
-            textProgress = (1 - (quoteLength - arrayInput.length) / quoteLength) * 100
+            const textProgress = ((1 - (quoteLength - arrayInput.length) / quoteLength) * 100).toFixed(1)
+            
             // checking the accurecy of typed words
             let correct = true
             let correctCount = 0
@@ -439,10 +440,14 @@ ws.onmessage = message => {
     //real-time progress bar values of all players sent from server 
     if (response.method === "progress") {
         response.game.clients.forEach(c => {
+
+            //It's very crucial to note here that both progress-bar-fill and progress-bar-value elements must be accessed
+            //using a unique id and not class other-wise all changes will reflect on only one child
             const progressBar = document.getElementById(`${c.color}`)
-            const progressValue = document.querySelector(`.progress-bar-value`)
+            const percentage = document.getElementById(`${c.color}***`)
+
             progressBar.style.width = `${c.progress}%`
-            progressValue.textContent = `${c.progress.toFixed(1)}%`
+            percentage.textContent = `${c.progress}`
         })
     }
 
