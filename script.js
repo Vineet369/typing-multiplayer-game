@@ -13,7 +13,6 @@ let completed = false;
 // let ws = new WebSocket("http://localhost:3000/");
 let ws = new WebSocket("https://websocket-multiplayer-typing-game.onrender.com");
 
-
 //getting some pre-existing elements from html-------------------------------- 
 const divGamePlay = document.getElementById("divGamePlay");
 const btnPlayerName = document.getElementById('btnName');
@@ -26,8 +25,28 @@ const creating = document.getElementById('creating');
 const invalid = document.getElementById('invalid');
 const result = document.getElementById('result');
 
+//until websocket is not connected, a message must be shown
+const connectionState = document.createElement('div');
+const connectionStateBg = document.createElement('div');
+connectionState.classList.add('connectionState');
+connectionStateBg.classList.add('connectionStatebg');
+connectionState.textContent = 'connecting with the server, please wait...';
+creating.appendChild(connectionStateBg)
+connectionStateBg.appendChild(connectionState)
+
 
 //event listeners---------------------------------------------------------------
+// Listen for messages
+ws.addEventListener('message', (event) => {
+    while (creating.firstChild)
+        creating.removeChild(creating.firstChild)
+});
+
+// Handle WebSocket errors
+ws.addEventListener('error', () => {
+    prompt("Something went wrong while connecting with the server, please refresh the page")
+});
+
 //for button "i'm in" while everything else remain disabled
 btnPlayerName.addEventListener('click', e => {
     const c1 = document.querySelector('#btnCreate')
