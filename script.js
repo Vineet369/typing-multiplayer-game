@@ -274,11 +274,11 @@ ws.onmessage = message => {
             playerIdentity.textContent = `${c.playerName} :`;
             // console.log(playerName)
 
-            percentage.id=`${c.color}***`
+            percentage.id=`${c.color}***${c.clientId}`
             percentage.classList.add('progress-bar-value')
             percentage.textContent = 0
             fill.classList.add('progress-bar-fill')
-            fill.id = c.color
+            fill.id = `${c.color}${c.clientId}`
 
             mainContainer.appendChild(leaderboard)
             leaderboard.appendChild(playerDiv)
@@ -462,8 +462,8 @@ ws.onmessage = message => {
 
             //It's very crucial to note here that both progress-bar-fill and progress-bar-value elements must be accessed
             //using a unique id and not class other-wise all changes will reflect on only one child
-            const progressBar = document.getElementById(`${c.color}`)
-            const percentage = document.getElementById(`${c.color}***`)
+            const progressBar = document.getElementById(`${c.color}${clientId}`)
+            const percentage = document.getElementById(`${c.color}***${clientId}`)
 
             progressBar.style.width = `${c.progress}%`
             percentage.textContent = `${c.progress}%`
