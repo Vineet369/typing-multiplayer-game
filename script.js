@@ -44,7 +44,7 @@ ws.addEventListener('message', (event) => {
 
 // Handle WebSocket errors
 ws.addEventListener('error', () => {
-    prompt("Something went wrong while connecting with the server, please refresh the page")
+    location.reload();
 });
 
 //for button "i'm in" while everything else remain disabled
